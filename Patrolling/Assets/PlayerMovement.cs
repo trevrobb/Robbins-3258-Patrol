@@ -10,6 +10,9 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController controller;
     [SerializeField] GameObject feet;
     float gravityY;
+    [SerializeField] float jumpForce;
+    [SerializeField] float moveSpeed;
+    bool isJumping;
     void Start()
     {
         controller = this.gameObject.GetComponent<CharacterController>();
@@ -18,16 +21,17 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
 
-    private void FixedUpdate()
-    {
+        if (Input.GetKey(KeyCode.E))
+        {
+            this.transform.Rotate(new Vector3(0, .5f, 0) * -1);
+        }
 
-        float verticalInput = Input.GetAxis("Vertical");
-        float horizontalInput = Input.GetAxis("Horizontal");
 
-        if (Physics.CheckSphere(feet.transform.position, .1f, 6))
+        float verticalInput = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed; 
+        float horizontalInput = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
+
+        if (Physics.Raycast(transform.position, -Vector3.up, 12f))
         {
             grounded = true;
             gravityY = 0;
@@ -36,24 +40,43 @@ public class PlayerMovement : MonoBehaviour
 
         if (!grounded)
         {
-            gravityY = Physics.gravity.y/2;
+            gravityY = Physics.gravity.y * Time.deltaTime;
 
         }
-        playerMovement(verticalInput, horizontalInput, gravityY);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isJumping = true;
+            gravityY = Mathf.Sqrt(jumpForce * -2 * Physics.gravity.y);
+        }
+
+        if (grounded)
+        {
+            isJumping = false;
+        }
+
+        Vector3 verticalMovement = verticalInput * transform.forward ; 
+        Vector3 horizontalMovement = horizontalInput * transform.right;
+        controller.Move(new Vector3(horizontalMovement.x, gravityY, verticalMovement.z ));
     }
-    private void playerMovement(float vertical, float horizontal, float gravity)
+
+
+    private void FixedUpdate()
     {
-        
-
-        Vector3 verticalMovement = Vector3.forward * vertical;
-        Vector3 horizontalMovement = Vector3.right * horizontal;
-
-
-        controller.Move(new Vector3(verticalMovement.x, gravity, verticalMovement.z));
-        controller.Move(new Vector3(horizontalMovement.x, gravity, horizontalMovement.z));
-
-
-
-
     }
-}
+        private void playerMovement(float vertical, float horizontal, float gravity, bool jumping)
+        {
+
+
+
+
+            Vector3 forward = Vector3.forward;
+            Vector3 right = Vector3.right * transform.rotation.y;
+
+            
+
+
+
+
+        }
+    }
