@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
@@ -24,14 +26,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.E))
         {
-            this.transform.Rotate(new Vector3(0, .5f, 0) * -1);
+            this.transform.Rotate(new Vector3(0, .5f, 0) * -1 );
         }
 
 
         float verticalInput = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed; 
         float horizontalInput = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
 
-        if (Physics.Raycast(transform.position, -Vector3.up, 12f))
+        if (Physics.Raycast(transform.position, -Vector3.up, 14f))
         {
             grounded = true;
             gravityY = 0;
@@ -44,20 +46,26 @@ public class PlayerMovement : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
             isJumping = true;
             gravityY = Mathf.Sqrt(jumpForce * -2 * Physics.gravity.y);
+            
         }
-
-        if (grounded)
+        if (isJumping)
         {
-            isJumping = false;
+            if (grounded)
+            {
+                isJumping = false;
+            }
         }
+        
 
         Vector3 verticalMovement = verticalInput * transform.forward ; 
         Vector3 horizontalMovement = horizontalInput * transform.right;
-        controller.Move(new Vector3(horizontalMovement.x, gravityY, verticalMovement.z ));
+        controller.Move(verticalMovement);
+        controller.Move(horizontalMovement);
+        controller.Move(new Vector3(0, gravityY, 0));
     }
 
 
@@ -79,4 +87,12 @@ public class PlayerMovement : MonoBehaviour
 
 
         }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
+}
