@@ -9,7 +9,7 @@ public class RandomPath : MonoBehaviour
     int currentPoint;
     [SerializeField] NavMeshAgent agent;
 
-
+    bool visionCone;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -29,5 +29,10 @@ public class RandomPath : MonoBehaviour
             agent.SetDestination(controlPoints[currentPoint].position);
 
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+       
     }
 }
