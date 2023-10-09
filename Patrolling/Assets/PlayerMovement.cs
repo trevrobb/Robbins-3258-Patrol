@@ -94,5 +94,9 @@ public class PlayerMovement : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
+        if (other.CompareTag("VisionCone"))
+        {
+            RandomPath.instance.visionCone = true;
+        }
     }
 }
