@@ -26,26 +26,16 @@ public class RandomPath : MonoBehaviour
     {
         if (!visionCone)
         {
-
-        
         if (agent.remainingDistance < .1f)
         {
-            
-            currentPoint = Random.Range(0, 8);
-            
-            
+            currentPoint = Random.Range(0, 8); 
             agent.SetDestination(controlPoints[currentPoint].position);
-
         }
-
-
         }
         else
         {
             agent.SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
         }
-
-
     }
 
     

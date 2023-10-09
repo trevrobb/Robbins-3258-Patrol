@@ -24,7 +24,6 @@ public class DistanceChasing : MonoBehaviour
         if (Vector3.Distance(transform.position, Player.transform.position) < 110f && !doneChecking)
         {
             chaseThePlayer = true;
-            
         }
         if (chaseThePlayer)
         {
