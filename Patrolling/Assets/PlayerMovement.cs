@@ -48,17 +48,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
-            isJumping = true;
+            
             gravityY = Mathf.Sqrt(jumpForce * -2 * Physics.gravity.y);
             
         }
-        if (isJumping)
-        {
-            if (grounded)
-            {
-                isJumping = false;
-            }
-        }
+        
         
 
         Vector3 verticalMovement = verticalInput * transform.forward ; 
